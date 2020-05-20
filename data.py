@@ -1,6 +1,7 @@
 from heapq import heapify
 from heapq import heappop
 from heapq import heappush
+from heapdict import heapdict
 
 import numpy
 from enum import Enum
@@ -23,6 +24,7 @@ class C(Enum):
     HOSPITALET = 11
 
 
+# H Cuanto esta de lejos del nodo final
 def h(row, colum):
     if row == colum:
         return 0
@@ -48,30 +50,21 @@ def reconstruct_path(came_from, current):
 
 
 def a_start(start, goal):
-    if start.name == goal.name:
-        print(0)
-        return 0
-    open_set = [(0, start)]
-    heapify(open_set)
-
+    open_set = heapdict()
+    open_set[start] = 0
     came_from = {}
-
+    # g() cuando de lejos del nodo inicial
     g_score = {}
-    for city in C:
+    for city in C:  # Inicializamos en infinito para hacer poda
         g_score[city.name] = 999999999
-    g_score[start.name] = 0
-    f_score = {}
-    for city in C:
-        f_score[city.name] = 999999999
-    f_score[start.name] = matrix[start.value][goal.value]
+    g_score[start.name] = 0  # El nodo inicial no esta lejos de si mismo
 
     while len(open_set) != 0:
-        current = heappop(open_set)
-        current_postition = current[1].value
-        current_name = current[1].name
-
+        current = open_set.popitem()  # Obtenemos una city y su f_score
+        current_postition = current[0].value
+        current_name = current[0].name
         if current_postition == goal.value:
-            print(f_score[goal.name])
+            print(current[1])
             return reconstruct_path(came_from, current_name)
 
         for neighbor, column in enumerate(matrix[current_postition]):
@@ -80,12 +73,12 @@ def a_start(start, goal):
             if tentative_g_score < g_score[city.name]:
                 g_score[city.name] = tentative_g_score
                 tentative_f_score = g_score[city.name] + h(neighbor, goal.value)
-                f_score[city.name] = tentative_f_score
                 came_from[city.name] = current_name
-                if not exists(open_set, city, tentative_f_score):
-                    heappush(open_set, (f_score[city.name], city))
+                open_set[city] = tentative_f_score
 
 
 if __name__ == '__main__':
     matrix = numpy.loadtxt(open("data.csv", "rb"), delimiter=",", skiprows=1, dtype=int)
-    a_start(C.BARCELONA, C.VALLADOLID)
+    for city in C:
+        for city2 in C:
+            a_start(city, city2)
