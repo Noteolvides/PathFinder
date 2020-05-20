@@ -28,6 +28,8 @@ class CSP:
 
     def resolve(self, start, goal):
         startTime = time.time()
+        if start == goal:
+            return 0, [start.name], time.time() - startTime
         stack = []
         current = City(start.name, start.value, 0)
         stack.append(current)
@@ -55,12 +57,10 @@ class CSP:
                 if self.matrix[current_postition][neighbour] != 999999999 and not visited[neighbour]:
                     city = C(neighbour)
                     if city == goal:
-                        # jajas
-                        print("jajas")
                         came_from[city.name] = current_name
-
+                        end_time = time.time()
                         # TODO que el reconstruct calcule la longitud
-                        return 100, self.reconstruct_path(came_from, goal.name, start), time.time() - startTime
+                        return 100, self.reconstruct_path(came_from, goal.name, start), end_time - startTime
                     # TODO, pensar como hacer la heuristica para ciudades que ya estan en la pila
                     heuristica = self.calculo_restriccion(current_postition, neighbour, visited)
 
