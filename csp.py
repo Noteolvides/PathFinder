@@ -12,13 +12,14 @@ class CSP:
         self.matrix = matrix
 
     def reconstruct_path(self, came_from, current, start):
+        #Añade el ultimo
         total_path = [current]
-
+        # mientras no ha llegado a la ciudad inicial
+        # va recorriendo el camino de atras a adelante
         while start.name != current:
+            # Pilla el anterior y lo añade
             current = came_from[current]
             total_path.insert(0, current)
-            aux = current
-            # came_from.pop(current)
 
         return total_path
 
@@ -30,12 +31,13 @@ class CSP:
         stack = []
         current = City(start.name, start.value, 0)
         stack.append(current)
-
+        # Hay que iniciarlo a la longitud que toca para que no pete al acceder
         visited = [False] * len(C)
         came_from = {}
 
         found = False
         while not found:
+            # El nombre antiguo se guarda para tener bien las relaciones de came_from
             old_name = current.name
             # Devolvemos la ciudad con la mejor restriccion
             current = stack.pop()
@@ -49,12 +51,14 @@ class CSP:
 
             ordenar = []
             for neighbour, column in enumerate(self.matrix[current_postition]):
+                # Si un vecino no es valido, no hace falta hacer los calculos de dentro
                 if self.matrix[current_postition][neighbour] != 999999999 and not visited[neighbour]:
                     city = C(neighbour)
                     if city == goal:
+                        # jajas
                         print("jajas")
                         came_from[city.name] = current_name
-                        # came_from[current_name] = city.name
+
                         # TODO que el reconstruct calcule la longitud
                         return 100, self.reconstruct_path(came_from, goal.name, start), time.time() - startTime
                     # TODO, pensar como hacer la heuristica para ciudades que ya estan en la pila
@@ -71,6 +75,7 @@ class CSP:
             ordenar.sort(reverse=True, key=attrgetter('heuristica'))
             # TODO mirar si se puede guardar sin el value
             # TODO esta guardando el array. no los elementos
+            # El extend seria un addAll de un array a otro
             stack.extend(ordenar)
 
     def calculo_restriccion(self, current_postition, neighbour, visited):
