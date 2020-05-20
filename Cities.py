@@ -14,3 +14,10 @@ class C(Enum):
     CORDOBA = 9
     VALLADOLID = 10
     HOSPITALET = 11
+
+
+class City:
+    def __init__(self, name, value, heuristica):
+        self.name = name
+        self.value = value
+        self.heuristica = heuristica

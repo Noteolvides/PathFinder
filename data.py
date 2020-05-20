@@ -4,6 +4,7 @@ import time
 from AStar import AStar
 from Cities import C
 from Dijkstra import Dijkstra
+from csp import CSP
 
 if __name__ == '__main__':
     matrix = numpy.loadtxt(open("data.csv", "rb"), delimiter=",", skiprows=1, dtype=int)
@@ -14,8 +15,11 @@ if __name__ == '__main__':
     totalTimeDist = 0
     astar = AStar(matrix)
     disktra = Dijkstra(matrix)
+    csp = CSP(matrix)
+    csp.resolve(C.BARCELONA, C.BILBAO)
     for city in C:
         for city2 in C:
+
             print("From :" + city.name + "\t" "to :" + city2.name)
             (costAstar, pathAStar, timeAStar) = astar.resolve(city, city2)
             print("Astart GOT: " + "Cost of:" + str(costAstar) + " Path of: " + str(pathAStar) + " Time of: " + str(
