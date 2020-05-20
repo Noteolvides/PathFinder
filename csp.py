@@ -13,5 +13,5 @@ def csp_start(start, goal):
         current = heappop(open_set)
         # pillar las siguientes ciudades
         for city in matrix[current]:
-            heappush(city)
+            heappush(open_set, city)
         # comprobaciones de restricciones
