@@ -5,6 +5,8 @@ from heapq import heappush
 import numpy
 from enum import Enum
 
+from csp import csp_start
+
 matrix = []
 
 
@@ -89,3 +91,4 @@ def a_start(start, goal):
 if __name__ == '__main__':
     matrix = numpy.loadtxt(open("data.csv", "rb"), delimiter=",", skiprows=1, dtype=int)
     a_start(C.BARCELONA, C.VALLADOLID)
+    csp_start(C.BARCELONA, C.VALLADOLID)
