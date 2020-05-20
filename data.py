@@ -16,7 +16,8 @@ if __name__ == '__main__':
     astar = AStar(matrix)
     disktra = Dijkstra(matrix)
     csp = CSP(matrix)
-    csp.resolve(C.BARCELONA, C.BILBAO)
+    (costAstar, path, timeAStar) = csp.resolve(C.HOSPITALET, C.MURCIA)
+    print(path)
     for city in C:
         for city2 in C:
 
