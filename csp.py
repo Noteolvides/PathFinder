@@ -2,8 +2,6 @@ import time
 from heapq import heapify, heappop, heappush
 from operator import attrgetter
 
-from heapdict import heapdict
-
 from Cities import C, City
 
 
@@ -12,24 +10,26 @@ class CSP:
         self.matrix = matrix
 
     def reconstruct_path(self, came_from, current, start):
-        #Añade el ultimo
+        # Acumulado km
+        km_acumulados = 0
+        # Añade el ultimo
         total_path = [current]
         # mientras no ha llegado a la ciudad inicial
         # va recorriendo el camino de atras a adelante
         while start.name != current:
+            pos_inicio = C[current]
+            pos_fin = C[came_from[current]]
             # Pilla el anterior y lo añade
+            km_acumulados += self.matrix[pos_fin.value][pos_inicio.value]
             current = came_from[current]
             total_path.insert(0, current)
 
-        return total_path
-
-    def sortFunc(e):
-        return e.valor
+        return km_acumulados, total_path
 
     def resolve(self, start, goal):
-        startTime = time.time()
+        start_time = time.time()
         if start == goal:
-            return 0, [start.name], time.time() - startTime
+            return 0, [start.name], time.time() - start_time
         stack = []
         current = City(start.name, start.value, 0)
         stack.append(current)
@@ -60,12 +60,13 @@ class CSP:
                         came_from[city.name] = current_name
                         end_time = time.time()
                         # TODO que el reconstruct calcule la longitud
-                        return 100, self.reconstruct_path(came_from, goal.name, start), end_time - startTime
+                        (km, path) = self.reconstruct_path(came_from, goal.name, start)
+                        return km, path, end_time - start_time
                     # TODO, pensar como hacer la heuristica para ciudades que ya estan en la pila
-                    heuristica = self.calculo_restriccion(current_postition, neighbour, visited)
+                    heuristica = self.calculoTest(current_postition, neighbour, visited) #self.calculo_restriccion(current_postition, neighbour, visited)
 
                     if heuristica == -1:
-                        visited[neighbour] = False
+                        visited[neighbour] = True
                         continue
 
                     # TODO mirar si se puede hacer un add ordenado
@@ -92,3 +93,10 @@ class CSP:
                 salidas += 1
             columna += 1
         return salidas
+
+    def calculoTest(self, current_postition, neighbour, visited):
+        salidas = self.exits(neighbour, visited)
+        if salidas == 0:
+            return -1
+        return 20 - salidas
+        pass
