@@ -11,6 +11,11 @@ class CSP:
     def __init__(self, matrix):
         self.matrix = matrix
 
+    def distanceToNextNode(self, current, neighbor):
+        if current == neighbor:
+            return 0
+        return self.matrix[current][neighbor]
+
     def reconstruct_path(self, came_from, current, start):
         # Acumulado km
         km_acumulados = 0
@@ -33,26 +38,25 @@ class CSP:
         if start == goal:
             return 0, [start.name], time.time() - start_time
         stack = []
-        current = start
-        stack.append(start)
+        current = [start]
+        ordenar = heapdict()
+        ordenar[start] = 0
         # Hay que iniciarlo a la longitud que toca para que no pete al acceder
         visited = [False] * len(C)
         came_from = {}
 
         while True:
             # El nombre antiguo se guarda para tener bien las relaciones de came_from
-            old_name = current.name
+            old_name = current[0].name
             # Devolvemos la ciudad con la mejor restriccion
-            current = stack.pop()
+            current = ordenar.popitem()
             # Guardar valores varios de la ciudad actual
-            current_postition = current.value
-            current_name = current.name
+            current_postition = current[0].value
+            current_name = current[0].name
             # Marcamos la ciudad actual como visitada
             visited[current_postition] = True
             # pillar las siguientes ciudades
             came_from[current_name] = old_name
-
-            ordenar = heapdict()
             neighbour = 0
             while neighbour < len(self.matrix[current_postition]):
                 # Si un vecino no es valido, no hace falta hacer los calculos de dentro
@@ -64,7 +68,7 @@ class CSP:
                         (km, path) = self.reconstruct_path(came_from, goal.name, start)
                         return km, path, end_time - start_time
                     # TODO, pensar como hacer la heuristica para ciudades que ya estan en la pila
-                    heuristica = self.calculoTest(current_postition, neighbour, visited) #self.calculo_restriccion(current_postition, neighbour, visited)
+                    heuristica = self.calculo_restriccion(current_postition, neighbour, visited, goal)
 
                     if heuristica == -1:
                         visited[neighbour] = True
@@ -74,14 +78,12 @@ class CSP:
                     ordenar[city] = heuristica
                 neighbour += 1
 
-            # El extend seria un addAll de un array a otro
-            stack.extend(ordenar)
-
-    def calculo_restriccion(self, current_postition, neighbour, visited):
+    def calculo_restriccion(self, current_postition, neighbour, visited, goal):
         salidas = self.exits(neighbour, visited)
         if salidas == 0:
             return -1
-        return self.matrix[current_postition][neighbour] / salidas
+        return self.matrix[current_postition][neighbour] / salidas + self.distanceToNextNode(neighbour,
+                                                                                             goal.value) / salidas
 
     def exits(self, neighbour, visited):
         salidas = 0

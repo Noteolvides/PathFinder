@@ -12,6 +12,7 @@ if __name__ == '__main__':
 
     rightTimesStar = 0
     rightTimesBFS = 0
+    rightTimesCSP = 0
     totalCases = 0
     totalTimeStar = 0
     totalTimeBFS = 0
@@ -54,6 +55,8 @@ if __name__ == '__main__':
                 rightTimesStar += 1
             if pathBfs == pathDisk:
                 rightTimesBFS += 1
+            if pathCSP == pathDisk:
+                rightTimesCSP += 1
             totalCases += 1
 
     print("Total Cases " + str(totalCases))
@@ -63,17 +66,20 @@ if __name__ == '__main__':
     print("Right Cases BFS " + str(rightTimesBFS))
     print("Right Percentaje " + str((rightTimesBFS / totalCases) * 100) + "%")
 
+    print("Right Cases CSP " + str(rightTimesCSP))
+    print("Right Percentaje " + str((rightTimesCSP / totalCases) * 100) + "%")
+
     mediaTiempoBfs = totalTimeBFS / totalCases
     mediaTiempoStar = totalTimeStar / totalCases
     mediaTiempoDist = totalTimeDist / totalCases
     mediaTiempoCSP = totalTimeCSP / totalCases
-    print("Media tiempo Star " + str(mediaTiempoStar))
-    print("Media tiempo Disk " + str(mediaTiempoDist))
-    print("Media tiempo CSP " + str(mediaTiempoCSP))
-    print("Porcentaje de mejora " + str((mediaTiempoDist/mediaTiempoStar)*100)+"%")
 
     print("Media tiempo BFS " + str(mediaTiempoBfs * 1000) + " ms")
     print("Media tiempo Star " + str(mediaTiempoStar * 1000) + " ms")
     print("Media tiempo Disk " + str(mediaTiempoDist * 1000) + " ms")
+    print("Media tiempo CSP " + str(mediaTiempoCSP * 1000) + " ms")
+
     print("Porcentaje de mejora Astar " + str((mediaTiempoDist / mediaTiempoStar) * 100) + "%")
     print("Porcentaje de mejora BFS " + str((mediaTiempoDist / mediaTiempoBfs) * 100) + "%")
+    print("Porcentaje de mejora CSP " + str((mediaTiempoDist / mediaTiempoCSP) * 100) + "%")
+
