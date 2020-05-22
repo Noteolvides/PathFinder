@@ -2,7 +2,9 @@ import time
 from heapq import heapify, heappop, heappush
 from operator import attrgetter
 
-from Cities import C, City
+from heapdict import heapdict
+
+from Cities import C
 
 
 class CSP:
@@ -31,14 +33,13 @@ class CSP:
         if start == goal:
             return 0, [start.name], time.time() - start_time
         stack = []
-        current = City(start.name, start.value, 0)
-        stack.append(current)
+        current = start
+        stack.append(start)
         # Hay que iniciarlo a la longitud que toca para que no pete al acceder
         visited = [False] * len(C)
         came_from = {}
 
-        found = False
-        while not found:
+        while True:
             # El nombre antiguo se guarda para tener bien las relaciones de came_from
             old_name = current.name
             # Devolvemos la ciudad con la mejor restriccion
@@ -51,15 +52,15 @@ class CSP:
             # pillar las siguientes ciudades
             came_from[current_name] = old_name
 
-            ordenar = []
-            for neighbour, column in enumerate(self.matrix[current_postition]):
+            ordenar = heapdict()
+            neighbour = 0
+            while neighbour < len(self.matrix[current_postition]):
                 # Si un vecino no es valido, no hace falta hacer los calculos de dentro
-                if self.matrix[current_postition][neighbour] != 999999999 and not visited[neighbour]:
+                if not visited[neighbour] and self.matrix[current_postition][neighbour] != 999999999:
                     city = C(neighbour)
-                    if city == goal:
+                    if city.value == goal.value:
                         came_from[city.name] = current_name
                         end_time = time.time()
-                        # TODO que el reconstruct calcule la longitud
                         (km, path) = self.reconstruct_path(came_from, goal.name, start)
                         return km, path, end_time - start_time
                     # TODO, pensar como hacer la heuristica para ciudades que ya estan en la pila
@@ -69,13 +70,10 @@ class CSP:
                         visited[neighbour] = True
                         continue
 
-                    # TODO mirar si se puede hacer un add ordenado
-                    ordenar.append(City(city.name, city.value, heuristica))
+                    # lo añadimos al heap tree y que se ordene solo
+                    ordenar[city] = heuristica
+                neighbour += 1
 
-            # TODO usar un quicksort miar para optimizar
-            ordenar.sort(reverse=True, key=attrgetter('heuristica'))
-            # TODO mirar si se puede guardar sin el value
-            # TODO esta guardando el array. no los elementos
             # El extend seria un addAll de un array a otro
             stack.extend(ordenar)
 
@@ -89,7 +87,7 @@ class CSP:
         salidas = 0
         columna = 0
         while columna < len(self.matrix[neighbour]):
-            if self.matrix[neighbour][columna] != 999999999 and not visited[columna]:
+            if not visited[columna] and self.matrix[neighbour][columna] != 999999999:
                 salidas += 1
             columna += 1
         return salidas

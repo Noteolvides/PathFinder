@@ -15,9 +15,9 @@ class C(Enum):
     VALLADOLID = 10
     HOSPITALET = 11
 
-
-class City:
-    def __init__(self, name, value, heuristica):
-        self.name = name
-        self.value = value
-        self.heuristica = heuristica
+#
+# class City:
+#     def __init__(self, name, value, heuristica):
+#         self.name = name
+#         self.value = value
+#         self.heuristica = heuristica
