@@ -56,4 +56,4 @@ if __name__ == '__main__':
     print("Media tiempo Star " + str(mediaTiempoStar * 1000) + " ms")
     print("Media tiempo Disk " + str(mediaTiempoDist * 1000) + " ms")
     print("Porcentaje de mejora Astar " + str((mediaTiempoDist / mediaTiempoStar) * 100) + "%")
-    print("Porcentaje de mejora BFS " + str((mediaTiempoBfs / mediaTiempoStar) * 100) + "%")
+    print("Porcentaje de mejora BFS " + str((mediaTiempoDist / mediaTiempoBfs) * 100) + "%")
