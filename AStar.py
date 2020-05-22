@@ -22,6 +22,7 @@ class AStar:
             current = came_from[current]
             total_path.insert(0, current)
         return total_path
+
     def resolve(self, start, goal):
         startTime = time.time()
         open_set = heapdict()
