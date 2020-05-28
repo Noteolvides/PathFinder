@@ -1,5 +1,4 @@
 import time
-
 from heapdict import heapdict
 
 from Cities import C

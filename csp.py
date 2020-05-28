@@ -1,7 +1,4 @@
 import time
-from heapq import heapify, heappop, heappush
-from operator import attrgetter
-
 from heapdict import heapdict
 
 from Cities import C
