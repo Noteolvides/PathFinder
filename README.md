@@ -1,4 +1,10 @@
 # PathFinder
+### Description
+A 4 Algoritms comparative.
+* Dijkstra
+* BFS
+* CSP
+* AStart
 ### Authors
 * Gerard Melgares
 * Gustavo Gómez López De San Román
